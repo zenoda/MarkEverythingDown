@@ -1,5 +1,8 @@
 # MarkEverythingDown
 
++ **MarkEverythingDown** - 你的全能文档Markdown转换神器！🚀
+  一键将PDF/Office/图片/代码等文件转换为结构清晰的Markdown，专为LLM优化设计。结合Qwen2.5 VL视觉模型，连扫描件都能智能解析！
+
 **MarkEverythingDown** is a versatile document conversion tool that transforms various file formats into clean, structured markdown. Whether you're working with PDFs, Office documents, images, code files, or notebooks, MarkEverythingDown provides a unified interface to convert them all.
 
 The tool is specifically designed to leverage **Qwen2.5 VL** (Vision-Language) models through OpenAI-compatible APIs, supporting both local inference engines like LMStudio and cloud API providers like DashScope. This design enables high-quality processing of visual content while maintaining flexibility in deployment options.
