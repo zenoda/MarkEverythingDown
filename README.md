@@ -117,14 +117,6 @@ Below are the user case of converting images, PDFs, and Office documents into ma
 
 **Input**: ![test_image1.png - A slide about the Turing Award](test_docs/test_image1.png)
 
-**Command**:
-```bash
-python test_processor.py test_docs/test_image1.png \
-    --api-key lm_studio \
-    --base-url http://localhost:1234/v1 \
-    --model qwen2.5-vl-7b-instruct
-```
-
 **Output** (`test_output/test_image1.md`):
 ```markdown
 # 2018 Turing Award for deep learning
@@ -147,14 +139,6 @@ contributions of lasting importance to computing.
 #### Your Average Slides from a Course (a bit more complex)
 
 **Input**: ![test_image3.png - A slide about basic R programming](test_docs/test_image3.png)
-
-**Command**:
-```bash
-python test_processor.py test_docs/test_image3.png \
-    --api-key lm_studio \
-    --base-url http://localhost:1234/v1 \
-    --model qwen2.5-vl-7b-instruct
-```
 
 **Output** (`test_output/test_image3.md`):
 ```markdown
@@ -210,14 +194,6 @@ python test_processor.py test_docs/test_image3.png \
 
 **Input**: ![test_image2.png - A WeChat screenshot](test_docs/test_image2.png)
 
-**Command**:
-```bash
-python test_processor.py test_docs/test_image2.png \
-    --api-key lm_studio \
-    --base-url http://localhost:1234/v1 \
-    --model qwen2.5-vl-7b-instruct
-```
-
 **Output** (`test_output/test_image2.md`):
 ```markdown
 # WeChat Transcript
@@ -238,11 +214,6 @@ python test_processor.py test_docs/test_image2.png \
 #### Text Extraction (Default)
 
 **Input**: [sample_pdf.pdf](test_docs/sample_pdf.pdf)
-
-**Command**:
-```bash
-python test_processor.py test_docs/sample.pdf
-```
 
 **Output** (`test_output/sample_pdf_noVision.md`):
 
@@ -344,15 +315,6 @@ on smartphones and computers.
 
 #### Vision Processing (For Scanned Documents)
 
-**Command**:
-```bash
-python test_processor.py test_docs/sample.pdf \
-    --api-key lmstudio \
-    --base-url http://localhost:1234/v1 \
-    --model qwen2.5-vl-7b-instruct \
-    --force-vision
-```
-
 **Output** (`test_output/sample_pdf_vision.md`):
 
 With the superb document parsing capability of Qwen2.5 VL, the output is much cleaner, and original structure is preserved.
@@ -415,11 +377,6 @@ Office document are structured in nature, no vision processing is needed.
 
 **Input**: [sample_docx.docx](test_docs/sample_docx.docx)
 
-**Command**:
-```bash
-python test_processor.py test_docs/sample.docx
-```
-
 **Output** (`test_output/sample_docx.md`):
 ```markdown
 # This is a Level 1 Heading
@@ -434,11 +391,6 @@ This is the normal text
 #### PowerPoint Presentations (PPTX)
 
 **Input**: [sample_pptx.pptx](test_docs/sample_pptx.pptx)
-
-**Command**:
-```bash
-python test_processor.py test_docs/sample.pptx
-```
 
 **Output** (`test_output/sample_pptx.md`):
 ```markdown
