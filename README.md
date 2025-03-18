@@ -70,15 +70,16 @@ This will open a browser window with the MarkEverythingDown interface, where you
 
 ### Command Line
 
+You can also use the command line interface to process files directly, where you need to specify the input file, API key, API URL, model name, whether to enable vision processing, and the output directory.
+
 ```bash
-# Process a single file
-python main.py path/to/document.pdf --output output_dir
-
-# Process a directory
-python main.py path/to/documents/ --output output_dir
-
-# Process a PDF with vision model
-python main.py path/to/document.pdf --output output_dir --api-key your_api_key --force-vision
+python main.py path/to/document.pdf \
+    --api-key you_api_key \
+    --base-url https://dashscope.aliyuncs.com/compatible-mode/v1 \
+    --model qwen2.5-vl-72b-instruct \
+    # --force-vision \ # Uncomment to force vision processing
+    # --max-concurrent 2 \ # Uncomment to set max concurrent processing, default is 2
+    --output path/to/output
 ```
 
 ## Vision Processing Configuration
