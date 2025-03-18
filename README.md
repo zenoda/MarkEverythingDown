@@ -339,7 +339,6 @@ We introduce Qwen2.5-VL, the latest flagship model of Qwen vision-language serie
 
 | Model                | Score |
 |----------------------|-------|
-| Qwen2.5-VL-728       | 93.2  |
 | Claude-3.5-Sonnet-0620 | 95.1  |
 | Qwen2.5-VL-72B       | 95.3  |
 | GPT-4o-0513          | 95.8  |
