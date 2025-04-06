@@ -17,6 +17,7 @@ class DocumentType(Enum):
     R_MARKDOWN = "rmd"
     MARKDOWN = "md"
     TEXT = "txt"
+    EXCEL = "excel"  # xlsx, xls files
     UNKNOWN = "unknown"
     
     @classmethod
@@ -44,6 +45,8 @@ class DocumentType(Enum):
             return cls.MARKDOWN
         elif ext == "txt":
             return cls.TEXT
+        elif ext in ("xlsx", "xls", "xlsm"):
+            return cls.EXCEL
         else:
             return cls.UNKNOWN
 
@@ -258,6 +261,7 @@ class BaseDocumentProcessor(ABC):
         from processors.text.code_processor import CodeFileProcessor
         from processors.text.markdown_processor import MarkdownProcessor
         from processors.text.text_processor import TextProcessor
+        from processors.text.excel_processor import ExcelProcessor
         
         # Use vision processor if forced (applies to PDF)
         if force_vision:
@@ -278,6 +282,8 @@ class BaseDocumentProcessor(ABC):
             return CodeFileProcessor()
         elif doc_type in (DocumentType.MARKDOWN, DocumentType.R_MARKDOWN):
             return MarkdownProcessor()
+        elif doc_type == DocumentType.EXCEL:
+            return ExcelProcessor()
         elif doc_type == DocumentType.TEXT:
             return TextProcessor()
         else:

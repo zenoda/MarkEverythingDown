@@ -4,5 +4,8 @@
 
 ### This is a Level 3 Heading
 
-This is the normal text
+This is normal text with a simple table below:
 
+| Col1 | Col2 | Col3 |
+| --- | --- | --- |
+| abc | abc | abc |

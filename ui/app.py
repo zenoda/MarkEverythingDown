@@ -18,7 +18,9 @@ def detect_document_type(file_obj):
     show_force_vision = (doc_type == DocumentType.PDF)
     return f"{doc_type.value.upper()} Document", show_force_vision
 
-def process_documents(file_objs, output_dir, force_vision, max_concurrent, api_key, api_url, model, progress=gr.Progress()):
+def process_documents(file_objs, output_dir, force_vision, max_concurrent, images_per_batch, 
+                    api_key, api_url, model, temperature, max_tokens, dynamic_batching, max_tokens_per_batch,
+                    progress=gr.Progress()):
     """Process multiple documents and return summary"""
     try:
         if not file_objs:
@@ -81,13 +83,21 @@ def process_documents(file_objs, output_dir, force_vision, max_concurrent, api_k
                 # Detect document type
                 doc_type = DocumentType.from_file_extension(temp_path)
                 
+                # Convert max_tokens from string to int or None
+                max_tokens_value = None
+                if max_tokens and max_tokens.strip():
+                    try:
+                        max_tokens_value = int(max_tokens)
+                    except ValueError:
+                        print(f"Invalid max_tokens value: {max_tokens}, using default")
+                
                 # Select appropriate processor - following test_processor.py pattern
                 if force_vision and doc_type == DocumentType.PDF:
                     print(f"Using Vision processor for PDF: {file_obj.name}")
-                    processor = VisionDocumentProcessor()
+                    processor = VisionDocumentProcessor(temperature=temperature, max_tokens=max_tokens_value)
                 elif doc_type == DocumentType.IMAGE:
                     print(f"Using Vision processor for image: {file_obj.name}")
-                    processor = VisionDocumentProcessor()
+                    processor = VisionDocumentProcessor(temperature=temperature, max_tokens=max_tokens_value)
                 else:
                     processor = BaseDocumentProcessor.get_processor(temp_path)
                     print(f"Using {processor.__class__.__name__} for {file_obj.name}")
@@ -98,9 +108,19 @@ def process_documents(file_objs, output_dir, force_vision, max_concurrent, api_k
                     print(f"- API Key: {processor.api_key[:4]}*** (length: {len(processor.api_key)})")
                     print(f"- Base URL: {processor.base_url}")
                     print(f"- Model: {processor.model}")
-                    # Process PDF with concurrent pages
+                    print(f"- Temperature: {processor.temperature}")
+                    print(f"- Max Tokens: {processor.max_tokens}")
+                    
+                    # Process PDF with concurrent pages and multi-image batching
                     if doc_type == DocumentType.PDF:
-                        document = processor.process(temp_path, max_concurrent=max_concurrent)
+                        document = processor.process(
+                            temp_path, 
+                            max_concurrent=max_concurrent, 
+                            images_per_batch=images_per_batch,
+                            dynamic_batching=dynamic_batching,
+                            max_tokens_per_batch=max_tokens_per_batch
+                        )
+                        print(f"Processed PDF with {max_concurrent} concurrent workers, dynamic batching: {dynamic_batching}")
                     else:
                         # Direct processing for images
                         document = processor.process(temp_path)
@@ -171,73 +191,197 @@ def process_documents(file_objs, output_dir, force_vision, max_concurrent, api_k
     
 def create_ui():
     """Create enhanced Gradio UI with batch processing"""
-    with gr.Blocks(title="MarkEverythingDown", theme="default") as app:
-        gr.Markdown("# MarkEverythingDown")
-        gr.Markdown("Convert anything to structured markdown")
-        gr.Markdown("*Supported formats: PDF, DOCX, PPTX, images, code files, notebooks, and markdown variants (including RMD)*")
+    # Set a modern theme and customize CSS with baby blue color
+    custom_css = """
+    :root {
+        --baby-blue: #b3d8fd;
+    }
+    .title-text {
+        text-align: center !important;
+        margin-bottom: 10px !important;
+    }
+    .subtitle-text {
+        text-align: center !important;
+        margin-bottom: 20px !important;
+        opacity: 0.8;
+    }
+    .supported-formats {
+        text-align: center !important;
+        font-style: italic;
+        opacity: 0.7;
+        margin-bottom: 30px !important;
+    }
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .file-display {
+        min-height: 100px;
+        border-radius: 8px;
+    }
+    .file-container {
+        border: 1px solid rgba(179, 216, 253, 0.3);
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+    .processing-options {
+        padding: 15px;
+        border-radius: 10px;
+        background-color: rgba(179, 216, 253, 0.1);
+    }
+    .api-options {
+        padding: 15px;
+        border-radius: 10px;
+        background-color: rgba(179, 216, 253, 0.1);
+    }
+    .primary-button {
+        background-color: var(--baby-blue) !important;
+        border-color: var(--baby-blue) !important;
+    }
+    """
+    
+    # Use "sky" as the primary hue which is closest to baby blue, then customize with CSS
+    with gr.Blocks(title="MarkEverythingDown", theme=gr.themes.Soft(primary_hue="sky"), css=custom_css) as app:
+        gr.Markdown("# MarkEverythingDown", elem_classes=["title-text"])
+        gr.Markdown("Convert anything to structured markdown with AI", elem_classes=["subtitle-text"])
+        gr.Markdown("*Supported formats: PDF, DOCX, PPTX, Excel, images, code files, notebooks, and markdown variants*", elem_classes=["supported-formats"])
         
-        with gr.Row():
-            with gr.Column(scale=2):
-                # Allow multiple file upload without type restrictions
-                file_input = gr.File(
-                    label="Upload Document(s)",
-                    file_count="multiple"
-                )
-                
-                doc_type = gr.Textbox(label="Last Detected Document Type", interactive=False)
-                
-                # Output directory selection
-                output_dir = gr.Textbox(
-                    label="Output Directory",
-                    placeholder="Default: ./output",
-                    value="output"
-                )
-                
-                with gr.Row():
-                    # Force vision option (only visible for PDFs)
-                    force_vision = gr.Checkbox(
-                        label="Use vision model instead of text extraction for PDFs",
-                        value=False,
-                        info="Recommended for scanned PDFs"
+        with gr.Column(elem_classes=["container"]):
+            with gr.Row():
+                with gr.Column(scale=2):
+                    # File upload area with improved styling - using Column instead of Box
+                    with gr.Column(elem_classes=["file-container"]):
+                        file_input = gr.File(
+                            label="Upload Document(s)",
+                            file_count="multiple",
+                            elem_classes=["file-display"]
+                        )
+                        
+                        with gr.Row():
+                            doc_type = gr.Textbox(
+                                label="Detected Document Type",
+                                interactive=False
+                            )
+                            
+                            # Force vision option (only visible for PDFs)
+                            force_vision = gr.Checkbox(
+                                label="Use Vision Model for PDFs",
+                                value=False,
+                                info="Recommended for scanned PDFs"
+                            )
+                    
+                    # Output directory with improved styling
+                    output_dir = gr.Textbox(
+                        label="Output Directory",
+                        placeholder="Default: ./output",
+                        value="output",
+                        info="Where to save the processed markdown files"
                     )
+                    
+                    # Processing options with improved styling
+                    with gr.Accordion("Processing Options", open=True, elem_classes=["processing-options"]):
+                        with gr.Row():
+                            max_concurrent = gr.Slider(
+                                minimum=1, 
+                                maximum=32, 
+                                value=2, 
+                                step=1, 
+                                label="Concurrent Processing",
+                                info="Higher values process faster but use more resources"
+                            )
+                            
+                            temperature = gr.Slider(
+                                minimum=0.0,
+                                maximum=1.0,
+                                value=0.0,
+                                step=0.1,
+                                label="Temperature",
+                                info="0.0=deterministic, 1.0=creative"
+                            )
+                        
+                        with gr.Row():
+                            images_per_batch = gr.Slider(
+                                minimum=1,
+                                maximum=4,
+                                value=1,
+                                step=1,
+                                label="Pages Per Batch",
+                                info="Maximum number of pages to process in a single API call. Higher values provide better context between pages but use more resources (recommend 1 for smaller models)."
+                            )
+                            
+                            max_tokens = gr.Number(
+                                value=None,
+                                label="Max Tokens",
+                                precision=0,
+                                info="Blank uses model default"
+                            )
+                        
+                        with gr.Row():
+                            dynamic_batching = gr.Checkbox(
+                                label="Dynamic Batching",
+                                value=True,
+                                info="Automatically adjust batch sizes (≤ Pages Per Batch) based on page complexity. Helps optimize processing while staying within token limits."
+                            )
+                            
+                            max_tokens_per_batch = gr.Slider(
+                                minimum=1000,
+                                maximum=32768,
+                                value=4000,
+                                step=500,
+                                label="Max Tokens Per Batch",
+                                info="Limit for dynamic batching",
+                                visible=True
+                            )
+                    
+                    # API configuration with improved styling
+                    with gr.Accordion("API Configuration", open=False, elem_classes=["api-options"]):
+                        with gr.Row():
+                            api_key = gr.Textbox(
+                                label="API Key", 
+                                placeholder="lmstudio",
+                                value="lmstudio",
+                                info="API key for vision model"
+                            )
+                        
+                        with gr.Row():
+                            api_url = gr.Textbox(
+                                label="API URL", 
+                                placeholder="http://localhost:1234/v1",
+                                value="http://localhost:1234/v1",
+                                info="Base URL for API endpoint"
+                            )
+                            
+                            model = gr.Textbox(
+                                label="Model Name",
+                                placeholder="qwen2.5-vl-7b-instruct",
+                                value="qwen2.5-vl-7b-instruct",
+                                info="Model to use for processing"
+                            )
+                    
+                    # Process button with improved styling
+                    process_btn = gr.Button("Process Document(s)", variant="primary", size="lg")
                 
-                with gr.Accordion("Processing Options", open=True):
-                    max_concurrent = gr.Slider(
-                        minimum=1, 
-                        maximum=8, 
-                        value=2, 
-                        step=1, 
-                        label="Concurrent Processing (PDF pages)",
-                        info="Higher values may process faster but use more resources"
+                with gr.Column(scale=3):
+                    with gr.Tabs():
+                        with gr.TabItem("Preview"):
+                            output_text = gr.Code(
+                                label="Markdown Output", 
+                                language="markdown",
+                                lines=25,
+                                elem_classes=["markdown-preview"]
+                            )
+                        with gr.TabItem("Processing Summary"):
+                            summary_text = gr.Markdown()
+                    
+                    output_files = gr.File(
+                        label="Processed Files",
+                        file_count="multiple",
+                        type="filepath"
                     )
-                
-                with gr.Accordion("API Configuration", open=True):
-                    api_key = gr.Textbox(
-                        label="API Key", 
-                        placeholder="lmstudio",
-                        value="lmstudio"
-                    )
-                    api_url = gr.Textbox(
-                        label="API URL", 
-                        placeholder="http://localhost:1234/v1",
-                        value="http://localhost:1234/v1"
-                    )
-                    model = gr.Textbox(
-                        label="Model Name",
-                        placeholder="qwen2.5-vl-7b-instruct",
-                        value="qwen2.5-vl-7b-instruct"
-                    )
-                
-                process_btn = gr.Button("Process Document(s)", variant="primary")
-                
-            with gr.Column(scale=3):
-                with gr.Tabs():
-                    with gr.TabItem("Output Preview"):
-                        output_text = gr.Code(label="Last Processed Output", language="markdown")
-                    with gr.TabItem("Processing Summary"):
-                        summary_text = gr.Markdown()
-                
-                output_files = gr.File(label="Processed Files", file_count="multiple")
+            
+            # Status message at the bottom
+            status = gr.Markdown("*Ready to process documents. Upload files to begin.*")
         
         # When file is uploaded, detect document type of first file
         file_input.change(
@@ -246,11 +390,27 @@ def create_ui():
             outputs=[doc_type, force_vision]
         )
         
+        # Toggle visibility of max_tokens_per_batch based on dynamic_batching
+        dynamic_batching.change(
+            fn=lambda x: gr.update(visible=x),
+            inputs=[dynamic_batching],
+            outputs=[max_tokens_per_batch]
+        )
+        
         # Process documents when button is clicked
         process_btn.click(
+            fn=lambda: gr.Markdown("*Processing documents... Please wait.*"),
+            inputs=None,
+            outputs=status
+        ).then(
             fn=process_documents,
-            inputs=[file_input, output_dir, force_vision, max_concurrent, api_key, api_url, model],
+            inputs=[file_input, output_dir, force_vision, max_concurrent, images_per_batch, 
+                   api_key, api_url, model, temperature, max_tokens, dynamic_batching, max_tokens_per_batch],
             outputs=[output_text, output_files, summary_text]
+        ).then(
+            fn=lambda: gr.Markdown("*Processing complete. Results are displayed above.*"),
+            inputs=None,
+            outputs=status
         )
         
     return app

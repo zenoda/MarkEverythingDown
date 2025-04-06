@@ -3,33 +3,68 @@
 + **MarkEverythingDown** - 你的全能文档Markdown转换神器！🚀
   一键将PDF/Office/图片/代码等文件转换为结构清晰的Markdown，专为LLM优化设计。结合Qwen2.5 VL视觉模型，连扫描件都能智能解析！
 
-## ✨ 为什么选择我们？
-✅ **AI超能力** - 深度集成Qwen2.5 VL模型  
+## ✨ 优势
+✅ **AI超能力** - 深度集成Qwen2.5 VL模型，完美保留表情符号和图像描述  
 ✅ **格式全覆盖** - 从微信截图到学术论文统统搞定  
 ✅ **双模处理** - 本地/云端自由切换，隐私与性能兼得  
-✅ **小白友好** - 无需代码，拖拽文件立即转换
+✅ **小白友好** - 无需代码，拖拽文件立即转换  
+✅ **智能分批** - 优化处理大型PDF文档，自动调整批次大小
 
 **MarkEverythingDown** is a versatile document conversion tool that transforms various file formats into clean, structured markdown. Whether you're working with PDFs, Office documents, images, code files, or notebooks, MarkEverythingDown provides a unified interface to convert them all.
 
-The tool is specifically designed to leverage **Qwen2.5 VL** (Vision-Language) models through OpenAI-compatible APIs, supporting both local inference engines like LMStudio and cloud API providers like DashScope. This design enables high-quality processing of visual content while maintaining flexibility in deployment options.
+The tool is specifically designed to leverage **Qwen2.5 VL** models through OpenAI-compatible APIs, supporting both local inference engines like LMStudio and cloud API providers like DashScope. This design enables high-quality processing of visual content while maintaining flexibility in deployment options.
 
 I developed this tool to streamline the conversion of documents into markdown format, which is both LLM-friendly and easy for human to read. The goal is to make document processing as seamless as possible, allowing users, who may not be familiar with programming, to easily convert their files for building their own RAG applications or fine-tuning their own models.
 
+## Roadmap
+
+### Recently Implemented (April 2025)
+
+#### Enhanced Processing Options
+- ✅ **Temperature Control**: Added temperature parameter (0.0-1.0) for controlling the determinism of AI output
+- ✅ **Max Tokens Setting**: Implemented customizable token limits for generation
+- ✅ **Multi-Page Processing**: Added support for processing multiple PDF pages in a single API call
+- ✅ **Dynamic Batch Sizing**: Implemented intelligent adjustment of batch sizes based on page complexity
+- ✅ **Optimized Token Management**: Added max_tokens_per_batch option to prevent token limit issues
+
+#### Improved Document Support
+- ✅ **Enhanced Table Handling in Word Documents**: Better preservation of table structure and formatting in DOCX files
+- ✅ **Excel Spreadsheet Support**: Full support for XLSX files with proper table formatting
+- ✅ **Better Visual Elements Preservation**: Improved handling of emojis and image descriptions
+
+#### Interface Improvements
+- ✅ **Enhanced UI Tooltips**: Clearer explanations of processing options
+- ✅ **Improved Error Handling**: Better feedback for processing issues
+- ✅ **Progress Indicators**: Added visual feedback during processing
+
+### Planned Features
+
+#### Near-term
+- 🔜 **CSV and TSV Support**: Native support for tabular data files
+- 🔜 **Custom Templates**: User-defined output formats for different document types
+- 🔜 **Batch Processing Improvements**: Enhanced management of large document collections
+
+#### Long-term
+- 🔜 **Multi-model Support**: Integration with additional vision-language models
+- 🔜 **Advanced Document Analysis**: Improved extraction of complex structures like footnotes and citations
+- 🔜 **API Mode**: Headless operation for integration with other applications
+- 🔜 **Collaborative Editing**: Real-time collaborative editing of converted documents
+
 ## Features
 
-- **Multi-format support**: Convert PDFs, DOCX, PPTX, images, code files, notebooks, and markdown variants
+- **Multi-format support**: Convert PDFs, DOCX, PPTX, XLSX, images, code files, notebooks, and markdown variants
 - **Intelligent processing**: Automatically selects the appropriate processor for each file type
 - **Vision AI support**: Optimized for Qwen2.5 VL models with OpenAI-compatible interface
-- **Dual processing options**: Use local inference APIs or cloud APIs
+- **Dual processing options**: Support local inference APIs and cloud APIs
 - **Batch processing**: Process multiple files at once with a simple interface
-- **User-friendly UI**: Easy-to-use web interface with Gradio
+- **User-friendly UI**: Easy-to-use web UI with Gradio and helpful tooltips
 - **Command line interface**: Quick conversions from the terminal
 
 ## Supported Formats
 
 | Category | Formats |
 |----------|---------|
-| Documents | PDF, DOCX, PPTX |
+| Documents | PDF, DOCX, PPTX, XLSX |
 | Images | PNG, JPG, JPEG, BMP |
 | Code | Python, R, and other programming languages |
 | Notebooks | Jupyter Notebooks (ipynb) |
@@ -40,7 +75,7 @@ I developed this tool to streamline the conversion of documents into markdown fo
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/MarkEverythingDown.git
+git clone https://github.com/RoffyS/MarkEverythingDown.git
 cd MarkEverythingDown
 
 # Set up a virtual environment
@@ -62,59 +97,62 @@ python main.py --ui
 
 ![GUI](ui/GUI.png)
 
-This will open a browser window with the MarkEverythingDown interface, where you can:
-1. Upload single or multiple files
-2. Select an output directory
-3. Configure processing options
-4. Process documents and preview results
+The MarkEverythingDown web interface provides an intuitive way to convert your documents to markdown:
+
+1. **Upload Files**: Drag and drop single or multiple files into the upload area
+2. **Configure Output**: Specify where you want your converted markdown files to be saved
+3. **Processing Options**: 
+   - **Concurrent Processing**: Control how many API calls are made at once
+   - **Pages Per Batch**: Set the maximum number of PDF pages to send in each API call
+   - **Dynamic Batching**: Enable automatic adjustment of `Pages Per Batch` based on page complexity and token limits
+   - **Temperature**: Adjust the creativity level of the AI (0.0 for deterministic results)
+   - **Max Tokens**: Set token limits for generation (blank uses model default)
+
+4. **API Configuration**: Configure API settings for your vision model:
+   - **API Key**: Your API key (default: "lmstudio" for local inference)
+   - **API URL**: The base URL for your API endpoint (default: "http://localhost:1234/v1")
+   - **Model Name**: The model to use for processing (default: "qwen2.5-vl-7b-instruct")
 
 ### Command Line
 
-You can also use the command line interface to process files directly, where you need to specify the input file, API key, API URL, model name, whether to enable vision processing, and the output directory.
-
 ```bash
-python main.py path/to/document.pdf \
-    --api-key you_api_key \
-    --base-url https://dashscope.aliyuncs.com/compatible-mode/v1 \
-    --model qwen2.5-vl-72b-instruct \
-    # --force-vision \ # Uncomment to force vision processing
-    # --max-concurrent 2 \ # Uncomment to set max concurrent processing, default is 2
-    --output path/to/output
-```
-
-## Vision Processing Configuration
-
-**MarkEverythingDown** is specifically optimized for Qwen2.5 VL models and supports two inference methods:
-
-### Local Processing
-
-If you can run the model locally:
-
-```bash
-python main.py path/to/image.png \
-    --api-key lmstudio \
+python main.py sample_pdf.pdf # path to input file \
+    --api-key lm_studio \
     --base-url http://localhost:1234/v1 \
-    --model qwen2.5-vl-7b-instruct
+    --model qwen2.5-vl-32b-instruct \
+    --force-vision \
+    --max-concurrent 1 \
+    --output test \
+    --images-per-batch 1 \
+    --dynamic-batching \
+    --max-tokens-per-batch 8192
 ```
 
-### Cloud Processing
+#### Command Line Options
 
-Access more powerful models through cloud APIs, such as DashScope:
-
-```bash
-python main.py path/to/image.png \
-    --api-key your_dashscope_api_key \
-    --base-url https://dashscope.aliyuncs.com/compatible-mode/v1 \
-    --model qwen2.5-vl-72b-instruct
-```
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--output`, `-o` | Output directory for markdown files | `output` |
+| `--ui` | Launch the graphical user interface | - |
+| `--force-vision` | Use vision model for PDFs instead of text extraction | `False` |
+| `--max-concurrent` | Maximum concurrent workers for PDF page processing | `2` |
+| `--images-per-batch` | Maximum number of PDF pages per API call | `1` |
+| `--dynamic-batching` | Automatically adjust images-per-batch based on page complexity and maximum tokens per batch | `True` |
+| `--no-dynamic-batching` | Disable dynamic batching | - |
+| `--max-tokens-per-batch` | Maximum tokens per batch for dynamic batching | `4000` |
+| `--temperature` | Temperature for generation (0.0-1.0) | `0.0` |
+| `--max-tokens` | Maximum tokens for generation | Model default |
+| `--api-key` | API key for vision processor | `lmstudio` |
+| `--base-url` | Base URL for API endpoint | `http://localhost:1234/v1` |
+| `--model` | Model name to use | `qwen2.5-vl-7b-instruct` |
 
 ## Example Use Cases
 
-Below are the user case of converting images, PDFs, and Office documents into markdown format. You are welcome to try it out with your own documents, either through the web UI or the command line. 
+Below are several user cases of converting images, PDFs, and Office documents into markdown format. You are welcome to try it out with your own documents, either through the web UI or the command line. You can also playaround with the prompt templates in ***processors/vision/vision_processor.py*** to customize the output format of PDFs and images.
 
 ### 1. Image Processing
 
-#### Your Average Slides from a Course 
+#### Course Slides with Images 
 
 **Input**: ![test_image1.png - A slide about the Turing Award](test_docs/test_image1.png)
 
@@ -137,7 +175,7 @@ contributions of lasting importance to computing.
 - **Presenters:** Fei-Fei Li, Yunzhu Li, Ruohan Gao
 ```
 
-#### Your Average Slides from a Course (a bit more complex)
+#### Course Slides with Code
 
 **Input**: ![test_image3.png - A slide about basic R programming](test_docs/test_image3.png)
 
@@ -191,7 +229,7 @@ contributions of lasting importance to computing.
 - [Link to Practice](https://campus.datacamp.com/courses/r-short-and-sweet/hello-r?ex=2)
 ```
 
-#### Even a WeChat Screenshot
+#### WeChat Screenshot
 
 **Input**: ![test_image2.png - A WeChat screenshot](test_docs/test_image2.png)
 
@@ -318,48 +356,35 @@ on smartphones and computers.
 
 **Output** (`test_output/sample_pdf_vision.md`):
 
-With the superb document parsing capability of Qwen2.5 VL, the output is much cleaner, and original structure is preserved.
+With the superb document parsing capability of Qwen2.5 VL, the output is much cleaner, and the original structure is preserved.
 
 ```markdown
-## Page 1
-
 # Qwen2.5-VL Technical Report
 
 **Qwen Team, Alibaba Group**
 
-- 🌐 https://chat.qwenlm.ai
-- 😄 https://huggingface.co/Qwen
-- 🔗 https://modelscope.cn/organization/qwen
-- 📚 https://github.com/QwenLM/Qwen2.5-VL
+🔗 https://chat.qwenlm.ai  
+🤖 https://huggingface.co/Qwen  
+🌐 https://modelscope.cn/organization/qwen  
+🐙 https://github.com/QwenLM/Qwen2.5-VL
 
 ## Abstract
 
 We introduce Qwen2.5-VL, the latest flagship model of Qwen vision-language series, which demonstrates significant advancements in both foundational capabilities and innovative functionalities. Qwen2.5-VL achieves a major leap forward in understanding and interacting with the world through enhanced visual recognition, precise object localization, robust document parsing, and long-video comprehension. A standout feature of Qwen2.5-VL is its ability to localize objects using bounding boxes or points accurately. It provides robust structured data extraction from invoices, forms, and tables, as well as detailed analysis of charts, diagrams, and layouts. To handle complex inputs, Qwen2.5-VL introduces dynamic resolution processing and absolute time encoding, enabling it to process images of varying sizes and videos of extended durations (up to hours) with second-level event localization. This allows the model to natively perceive spatial scales and temporal dynamics without relying on traditional normalization techniques. By training a native dynamic-resolution Vision Transformer (ViT) from scratch and incorporating Window Attention, we have significantly reduced computational overhead while maintaining native resolution. As a result, Qwen2.5-VL excels not only in static image and document understanding but also as an interactive visual agent capable of reasoning, tool usage, and task execution in real-world scenarios such as operating computers and mobile devices. The model achieves strong generalization across domains without requiring task-specific fine-tuning. Qwen2.5-VL is available in three sizes, addressing diverse use cases from edge AI to high-performance computing. The flagship Qwen2.5-VL-72B model matches state-of-the-art models like GPT-4o and Claude 3.5 Sonnet, particularly excelling in document and diagram understanding. The smaller Qwen2.5-VL-7B and Qwen2.5-VL-3B models outperform comparable competitors, offering strong capabilities even in resource-constrained environments. Additionally, Qwen2.5-VL maintains robust linguistic performance, preserving the core language competencies of the Qwen2.5 LLM.
 
-![Performance Comparison](image.png)
+![Performance comparison of Qwen2.5-VL models against other leading models](image.png)
 
-| Model                | Score |
-|----------------------|-------|
-| Claude-3.5-Sonnet-0620 | 95.1  |
-| Qwen2.5-VL-72B       | 95.3  |
-| GPT-4o-0513          | 95.8  |
-
-
-## Page 2
+The figure above shows a comparative analysis of the performance metrics for various Qwen2.5-VL models alongside other prominent models. Each slice represents different evaluation criteria, highlighting the superior performance of Qwen2.5-VL across multiple dimensions.
 
 # 1 Introduction
 
-Large vision-language models (LVLMs) ([OpenAI, 2024](https://openai.com/blog/); [Anthropic, 2024a](https://www.anthropic.com/index); [Team et al., 2023](https://example.com/team2023); [Wang et al., 2024f](https://example.com/wang2024f)) represent a pivotal breakthrough in artificial intelligence, signaling a transformative approach to multimodal understanding and interaction. By seamlessly integrating visual perception with natural language processing, these advanced models are fundamentally reshaping how machines interpret and analyze complex information across diverse domains. Despite significant advancements in multimodal large language models, the current capabilities of these models can be likened to the middle layer of a sandwich cookie—competent across various tasks but falling short of exceptional performance. Fine-grained visual tasks form the foundational layer of this analogy. In this iteration of Qwen2.5-VL, we are committed to exploring fine-grained perception capabilities, aiming to establish a robust foundation for LVLMs and create an agentic amplifier for real-world applications. The top layer of this framework is multi-modal reasoning, which is enhanced by leveraging the latest Qwen2.5 LLM and employing multi-modal QA data construction.
+Large vision-language models (LVLMs) (OpenAI, 2024; Anthropic, 2024a; Team et al., 2023; Wang et al., 2024f) represent a pivotal breakthrough in artificial intelligence, signaling a transformative approach to multimodal understanding and interaction. By seamlessly integrating visual perception with natural language processing, these advanced models are fundamentally reshaping how machines interpret and analyze complex information across diverse domains. Despite significant advancements in multimodal large language models, the current capabilities of these models can be likened to the middle layer of a sandwich cookie—competent across various tasks but falling short of exceptional performance. Fine-grained visual tasks form the foundational layer of this analogy. In this iteration of Qwen2.5-VL, we are committed to exploring fine-grained perception capabilities, aiming to establish a robust foundation for LVLMs and create an agentic amplifier for real-world applications. The top layer of this framework is multi-modal reasoning, which is enhanced by leveraging the latest Qwen2.5 LLM and employing multi-modal QA data construction.
 
-A spectrum of works has promoted the development of multimodal large models, characterized by architectural design, visual input processing, and data curation. One of the primary drivers of progress in LVLMs is the continuous innovation in architecture. The studies presented in ([Alayrac et al., 2022](https://example.com/alayrac2022); [Li et al., 2022a; 2023b](https://example.com/li2022a); [Liu et al., 2023a; b](https://example.com/liu2023a); [Wang et al., 2024](https://example.com/wang2024); [Zhang et al., 2024b](https://example.com/zhang2024b); [Wang et al., 2023](https://example.com/wang2023)) have incrementally shaped the current paradigm, which typically consists of a visual encoder, a cross-modal projector, and LLM. Fine-grained perception models have emerged as another crucial area. Models like ([Xiao et al., 2023](https://example.com/xiao2023); [Liu et al., 2023c](https://example.com/liu2023c); [Ren et al., 2024](https://example.com/ren2024); [Zhang et al., 2024a; d](https://example.com/zhang2024a); [Peng et al., 2023](https://example.com/peng2023); [Deitke et al., 2024](https://example.com/deitke2024)) have pushed the boundaries of what is possible in terms of detailed visual understanding. The architectures of Omni ([Li et al., 2024g; 2025b](https://example.com/li2024g); [Ye et al., 2024](https://example.com/ye2024)) and MoE ([Riquelme et al., 2021](https://example.com/riquelme2021); [Lee et al., 2024](https://example.com/lee2024); [Li et al., 2024h; c](https://example.com/li2024h); [Wu et al., 2024b](https://example.com/wu2024b)) also inspire the future evolution of LVLMs. Enhancements in visual encoders ([Chen et al., 2023](https://example.com/chen2023); [Liu et al., 2024b](https://example.com/liu2024b); [Liang et al., 2025](https://example.com/liang2025)) and resolution scaling ([Li et al., 2023c](https://example.com/li2023c); [Ye et al., 2023](https://example.com/ye2023); [Li et al., 2023a](https://example.com/li2023a)) have played a pivotal role in improving the quality of practical visual understanding. Curating data with more diverse scenarios and higher-quality is an essential step in training advanced LVLMs. The efforts proposed in ([Guo et al., 2024](https://example.com/guo2024); [Chen et al., 2024d](https://example.com/chen2024d); [Liu et al., 2024a](https://example.com/liu2024a); [Chen et al., 2024a](https://example.com/chen2024a); [Tong et al., 2024](https://example.com/tong2024); [Li et al., 2024a](https://example.com/li2024a)) are highly valuable contributions to this endeavor.
+A spectrum of works has promoted the development of multimodal large models, characterized by architectural design, visual input processing, and data curation. One of the primary drivers of progress in LVLMs is the continuous innovation in architecture. The studies presented in (Alayrac et al., 2022; Li et al., 2022a; 2023b; Liu et al., 2023b;a; Wang et al., 2024; Zhang et al., 2024b; Wang et al., 2023) have incrementally shaped the current paradigm, which typically consists of a visual encoder, a cross-modal projector, and LLM. Fine-grained perception models have emerged as another crucial area. Models like (Xiao et al., 2023; Liu et al., 2023c; Ren et al., 2024; Zhang et al., 2024a;d; Peng et al., 2023; Deitke et al., 2024) have pushed the boundaries of what is possible in terms of detailed visual understanding. The architectures of Omni (Li et al., 2024g; 2025b; Ye et al., 2024) and MoE (Riquelme et al., 2021; Lee et al., 2024; Li et al., 2024h;c; Wu et al., 2024b) also inspire the future evolution of LVLMs. Enhancements in visual encoders (Chen et al., 2023; Liu et al., 2024b; Liang et al., 2025) and resolution scaling (Li et al., 2023c; Ye et al., 2023; Li et al., 2023a) have played a pivotal role in improving the quality of practical visual understanding. Curating data with more diverse scenarios and higher-quality is an essential step in training advanced LVLMs. The efforts proposed in (Guo et al., 2024; Chen et al., 2024d; Liu et al., 2024a; Chen et al., 2024a; Tong et al., 2024; Li et al., 2024a) are highly valuable contributions to this endeavor.
 
 However, despite their remarkable progress, vision-language models currently face developmental bottlenecks, including computational complexity, limited contextual understanding, poor fine-grained visual perception, and inconsistent performance across varied sequence length.
 
-In this report, we introduce the latest work Qwen2.5-VL, which continues the open-source philosophy of the Qwen series, achieving and even surpassing top-tier closed-source models on various benchmarks. Technically, our contributions are four-folds: 
-1. We implement window attention in the visual encoder to optimize inference efficiency;
-2. We introduce dynamic FPS sampling, extending dynamic resolution to the temporal dimension and enabling comprehensive video understanding across varied sampling rates;
-3. We upgrade MRoPE in the temporal domain by aligning to absolute time, thereby facilitating more sophisticated temporal sequence learning;
-4. We make significant efforts in curating high-quality data for both pre-training and supervised fine-tuning, further scaling the pre-training corpus from 1.2 trillion tokens to 4.1 trillion tokens.
+In this report, we introduce the latest work Qwen2.5-VL, which continues the open-source philosophy of the Qwen series, achieving and even surpassing top-tier closed-source models on various benchmarks. Technically, our contributions are four-folds: (1) We implement window attention in the visual encoder to optimize inference efficiency; (2) We introduce dynamic FPS sampling, extending dynamic resolution to the temporal dimension and enabling comprehensive video understanding across varied sampling rates; (3) We upgrade MRoPE in the temporal domain by aligning to absolute time, thereby facilitating more sophisticated temporal sequence learning; (4) We make significant efforts in curating high-quality data for both pre-training and supervised fine-tuning, further scaling the pre-training corpus from 1.2 trillion tokens to 4.1 trillion tokens.
 
 The sparkling characteristics of Qwen2.5-VL are as follows:
 
@@ -371,7 +396,28 @@ The sparkling characteristics of Qwen2.5-VL are as follows:
 
 ### 3. Office Document Processing
 
-Office document are structured in nature, no vision processing is needed.
+#### Excel Spreadsheets (XLSX)
+**Input**: [sample_excel.xlsx](test_docs/sample_excel.xlsx)
+
+**Output** (`test_output/sample_excel.md`):
+```markdown
+# Excel Document: sample_excel
+
+
+## Sheet: sample_excel (9 rows × 28 columns)
+
+|   gvkey | datadate            |   fyear | indfmt   | consol   | popsrc   | datafmt   | tic   |   ajex | curcd   |   fyr |   apdedate |   fdate |   pdate |     act |      at |     che |    csho |     dlc |    dltt |     lct |      ni |   oancf |   utfdoc |    cik | costat   |   prcc_f |      gsubind |
+|--------:|:--------------------|--------:|:---------|:---------|:---------|:----------|:------|-------:|:--------|------:|-----------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|---------:|-------:|:---------|---------:|-------------:|
+|    1000 | 1977-12-31 00:00:00 |    1977 | INDL     | C        | D        | STD       | AE.2  |      1 | USD     |    12 |        nan |     nan |     nan |  23.548 |  44.025 |   1.303 |   2.226 |   0.533 |  18.116 |   8.236 |   1.928 |     nan |      nan |    nan | I        |    9.25  | nan          |
+|    1001 | 1978-12-31 00:00:00 |    1978 | INDL     | C        | D        | STD       | AMFD. |      1 | USD     |    12 |        nan |     nan |     nan | nan     | nan     | nan     | nan     | nan     | nan     | nan     | nan     |     nan |      nan | 723576 | I        |  nan     |   2.5301e+07 |
+|    1001 | 1979-12-31 00:00:00 |    1979 | INDL     | C        | D        | STD       | AMFD. |      1 | USD     |    12 |        nan |     nan |     nan | nan     | nan     | nan     | nan     | nan     | nan     | nan     | nan     |     nan |      nan | 723576 | I        |  nan     |   2.5301e+07 |
+|    1001 | 1980-12-31 00:00:00 |    1980 | INDL     | C        | D        | STD       | AMFD. |      1 | USD     |    12 |        nan |     nan |     nan | nan     | nan     | nan     | nan     | nan     | nan     | nan     | nan     |     nan |      nan | 723576 | I        |  nan     |   2.5301e+07 |
+|    1001 | 1981-12-31 00:00:00 |    1981 | INDL     | C        | D        | STD       | AMFD. |      1 | USD     |    12 |        nan |     nan |     nan | nan     | nan     | nan     | nan     | nan     | nan     | nan     | nan     |     nan |      nan | 723576 | I        |  nan     |   2.5301e+07 |
+|    1001 | 1982-12-31 00:00:00 |    1982 | INDL     | C        | D        | STD       | AMFD. |      1 | USD     |    12 |        nan |     nan |     nan | nan     | nan     | nan     | nan     | nan     | nan     | nan     | nan     |     nan |      nan | 723576 | I        |  nan     |   2.5301e+07 |
+|    1001 | 1983-12-31 00:00:00 |    1983 | INDL     | C        | D        | STD       | AMFD. |      1 | USD     |    12 |        nan |     nan |     nan |   4.807 |  14.08  |   4.28  |   3.568 |   0.52  |   4.344 |   1.913 |   1.135 |     nan |      nan | 723576 | I        |    7.25  |   2.5301e+07 |
+|    1001 | 1984-12-31 00:00:00 |    1984 | INDL     | C        | D        | STD       | AMFD. |      1 | USD     |    12 |        nan |     nan |     nan |   2.789 |  16.267 |   1.986 |   3.568 |   0.597 |   4.181 |   2.767 |   1.138 |     nan |      nan | 723576 | I        |    3.75  |   2.5301e+07 |
+|    1001 | 1985-12-31 00:00:00 |    1985 | INDL     | C        | D        | STD       | AMFD. |      1 | USD     |    12 |        nan |     nan |     nan |   3.852 |  39.495 |   2.787 |   3.988 |   8.336 |  11.908 |  13.922 |   2.576 |     nan |      nan | 723576 | I        |   10.125 |   2.5301e+07 |
+```
 
 #### Word Documents (DOCX)
 
@@ -385,7 +431,11 @@ Office document are structured in nature, no vision processing is needed.
 
 ### This is a Level 3 Heading
 
-This is the normal text
+This is normal text with a simple table below:
+
+| Col1 | Col2 | Col3 |
+| --- | --- | --- |
+| abc | abc | abc |
 ```
 
 #### PowerPoint Presentations (PPTX)

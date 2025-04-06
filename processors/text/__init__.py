@@ -5,6 +5,7 @@ from processors.text.ipynb_processor import JupyterNotebookProcessor
 from processors.text.code_processor import CodeFileProcessor
 from processors.text.markdown_processor import MarkdownProcessor
 from processors.text.text_processor import TextProcessor
+from processors.text.excel_processor import ExcelProcessor
 
 __all__ = [
     'PDFProcessor',
@@ -14,4 +15,5 @@ __all__ = [
     'CodeFileProcessor',
     'MarkdownProcessor',
     'TextProcessor',
+    'ExcelProcessor',
 ]

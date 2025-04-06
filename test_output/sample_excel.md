@@ -1,0 +1,17 @@
+# Excel Document: sample_excel
+
+
+## Sheet: sample_excel (9 rows × 28 columns)
+
+|   gvkey | datadate            |   fyear | indfmt   | consol   | popsrc   | datafmt   | tic   |   ajex | curcd   |   fyr |   apdedate |   fdate |   pdate |     act |      at |     che |    csho |     dlc |    dltt |     lct |      ni |   oancf |   utfdoc |    cik | costat   |   prcc_f |      gsubind |
+|--------:|:--------------------|--------:|:---------|:---------|:---------|:----------|:------|-------:|:--------|------:|-----------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|---------:|-------:|:---------|---------:|-------------:|
+|    1000 | 1977-12-31 00:00:00 |    1977 | INDL     | C        | D        | STD       | AE.2  |      1 | USD     |    12 |        nan |     nan |     nan |  23.548 |  44.025 |   1.303 |   2.226 |   0.533 |  18.116 |   8.236 |   1.928 |     nan |      nan |    nan | I        |    9.25  | nan          |
+|    1001 | 1978-12-31 00:00:00 |    1978 | INDL     | C        | D        | STD       | AMFD. |      1 | USD     |    12 |        nan |     nan |     nan | nan     | nan     | nan     | nan     | nan     | nan     | nan     | nan     |     nan |      nan | 723576 | I        |  nan     |   2.5301e+07 |
+|    1001 | 1979-12-31 00:00:00 |    1979 | INDL     | C        | D        | STD       | AMFD. |      1 | USD     |    12 |        nan |     nan |     nan | nan     | nan     | nan     | nan     | nan     | nan     | nan     | nan     |     nan |      nan | 723576 | I        |  nan     |   2.5301e+07 |
+|    1001 | 1980-12-31 00:00:00 |    1980 | INDL     | C        | D        | STD       | AMFD. |      1 | USD     |    12 |        nan |     nan |     nan | nan     | nan     | nan     | nan     | nan     | nan     | nan     | nan     |     nan |      nan | 723576 | I        |  nan     |   2.5301e+07 |
+|    1001 | 1981-12-31 00:00:00 |    1981 | INDL     | C        | D        | STD       | AMFD. |      1 | USD     |    12 |        nan |     nan |     nan | nan     | nan     | nan     | nan     | nan     | nan     | nan     | nan     |     nan |      nan | 723576 | I        |  nan     |   2.5301e+07 |
+|    1001 | 1982-12-31 00:00:00 |    1982 | INDL     | C        | D        | STD       | AMFD. |      1 | USD     |    12 |        nan |     nan |     nan | nan     | nan     | nan     | nan     | nan     | nan     | nan     | nan     |     nan |      nan | 723576 | I        |  nan     |   2.5301e+07 |
+|    1001 | 1983-12-31 00:00:00 |    1983 | INDL     | C        | D        | STD       | AMFD. |      1 | USD     |    12 |        nan |     nan |     nan |   4.807 |  14.08  |   4.28  |   3.568 |   0.52  |   4.344 |   1.913 |   1.135 |     nan |      nan | 723576 | I        |    7.25  |   2.5301e+07 |
+|    1001 | 1984-12-31 00:00:00 |    1984 | INDL     | C        | D        | STD       | AMFD. |      1 | USD     |    12 |        nan |     nan |     nan |   2.789 |  16.267 |   1.986 |   3.568 |   0.597 |   4.181 |   2.767 |   1.138 |     nan |      nan | 723576 | I        |    3.75  |   2.5301e+07 |
+|    1001 | 1985-12-31 00:00:00 |    1985 | INDL     | C        | D        | STD       | AMFD. |      1 | USD     |    12 |        nan |     nan |     nan |   3.852 |  39.495 |   2.787 |   3.988 |   8.336 |  11.908 |  13.922 |   2.576 |     nan |      nan | 723576 | I        |   10.125 |   2.5301e+07 |
+
