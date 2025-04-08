@@ -148,7 +148,7 @@ python main.py sample_pdf.pdf # path to input file \
 
 ## Example Use Cases
 
-Below are several user cases of converting images, PDFs, and Office documents into markdown format. You are welcome to try it out with your own documents, either through the web UI or the command line. You can also play around with the prompt templates in ***processors/vision/vision_processor.py*** to customize the output format of PDFs and images.
+Below are several examples of converting images, PDFs, and Office documents into markdown format. You are welcome to try it out with your own documents, either through the web UI or the command line. You can also play around with the prompt templates in ***processors/vision/vision_processor.py*** to customize the output format of PDFs and images.
 
 ### 1. Image Processing
 
