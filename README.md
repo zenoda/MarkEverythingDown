@@ -14,7 +14,7 @@
 
 The tool is specifically designed to leverage **Qwen2.5 VL** models through OpenAI-compatible APIs, supporting both local inference engines like LMStudio and cloud API providers like DashScope. This design enables high-quality processing of visual content while maintaining flexibility in deployment options.
 
-I developed this tool to streamline the conversion of documents into markdown format, which is both LLM-friendly and easy for human to read. The goal is to make document processing as seamless as possible, allowing users, who may not be familiar with programming, to easily convert their files for building their own RAG applications or fine-tuning their own models.
+I developed this tool to streamline the conversion of documents into markdown format, which is both LLM-friendly and easy for human to read. The goal is to make document processing as seamless as possible, allowing users to easily convert their files for RAG applications or SFT dataset preparations.
 
 ## Roadmap
 
