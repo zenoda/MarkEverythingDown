@@ -1,5 +1,5 @@
 # MarkEverythingDown
-
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/RoffyS/MarkEverythingDown)
 + **MarkEverythingDown** - 你的全能文档Markdown转换神器！🚀
   一键将PDF/Office/图片/代码等文件转换为结构清晰的Markdown，专为LLM优化设计。结合Qwen2.5 VL视觉模型，连扫描件都能智能解析！
 
