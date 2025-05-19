@@ -27,3 +27,7 @@ openai>=1.6.0
 
 # UI Framework
 gradio>=4.13.0
+
+# Server
+fastapi>=0.115.12
+uvicorn>=0.34.2
