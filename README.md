@@ -146,6 +146,13 @@ python main.py sample_pdf.pdf # path to input file \
 | `--base-url` | Base URL for API endpoint | `http://localhost:1234/v1` |
 | `--model` | Model name to use | `qwen2.5-vl-7b-instruct` |
 
+### Docker
+
+```shell
+docker build . zenoda/mark-everything-down:1.0.0
+docker run --name=mark-everything-down -p 8000:8000 zenoda/mark-everything-down:1.0.0
+```
+
 ## Example Use Cases
 
 Below are several examples of converting images, PDFs, and Office documents into markdown format. You are welcome to try it out with your own documents, either through the web UI or the command line. You can also play around with the prompt templates in ***processors/vision/vision_processor.py*** to customize the output format of PDFs and images.

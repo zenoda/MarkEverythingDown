@@ -1,6 +1,7 @@
 import os
 from fastapi import FastAPI, File, UploadFile, HTTPException, Form
 from pathlib import Path
+from typing import Optional
 from datetime import datetime
 from processors.base import BaseDocumentProcessor, DocumentType
 from processors.vision.vision_processor import VisionDocumentProcessor
@@ -77,12 +78,12 @@ async def process(file: UploadFile = File(...),
                   api_key: str = Form(...),
                   base_url: str = Form(...),
                   model: str = Form(...),
-                  max_concurrent: int = Form(2),
-                  images_per_batch: int = Form(1),
-                  temperature: float = Form(0.0),
-                  max_tokens: int | None = Form(None),
-                  dynamic_batching: bool = Form(True),
-                  max_tokens_per_batch: int = Form(4000)
+                  max_concurrent: Optional[int] = Form(2),
+                  images_per_batch: Optional[int] = Form(1),
+                  temperature: Optional[float] = Form(0.0),
+                  max_tokens: Optional[int] = Form(0),
+                  dynamic_batching: Optional[bool] = Form(True),
+                  max_tokens_per_batch: Optional[int] = Form(4000)
                   ):
     # 验证文件类型
     if not allowed_file(file.filename):
