@@ -15,7 +15,7 @@ class VisionDocumentProcessor(BaseDocumentProcessor):
     # Class variables to store API configuration
     DEFAULT_BASE_URL = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
     DEFAULT_MODEL = "qwen2.5-vl-72b-instruct"
-    MAX_IMAGE_SIZE = 1080 * 720
+    MAX_IMAGE_SIZE = 1920 * 1080
 
     # Class method to set API configuration
     @classmethod
@@ -167,7 +167,7 @@ class VisionDocumentProcessor(BaseDocumentProcessor):
                 # Check if we can convert the PDF
                 try:
                     print("Converting PDF to images...")
-                    images = convert_from_path(file_path)
+                    images = convert_from_path(file_path, dpi=300)
                     page_count = len(images)
                     print(f"Converted {page_count} pages")
 
@@ -191,10 +191,10 @@ class VisionDocumentProcessor(BaseDocumentProcessor):
                     temp_image_path = os.path.join(path, f"page_{i + 1}.jpg")
                     actual_size = image.width * image.height
                     if actual_size > self.max_image_size:
-                        zoom_factor = self.max_image_size / actual_size
+                        zoom_factor = pow(self.max_image_size / actual_size, 0.5)
                         width, height = image.width * zoom_factor, image.height * zoom_factor
-                        image = image.resize((int(width), int(height)), Image.Resampling.LANCZOS)
-                    image.save(temp_image_path, "JPEG")
+                        image = image.resize((int(width), int(height)), Image.Resampling.BILINEAR)
+                    image.save(temp_image_path, "JPEG", quality=90)
                     image_paths.append((i, temp_image_path))
 
                 # Process pages in parallel
@@ -272,7 +272,7 @@ class VisionDocumentProcessor(BaseDocumentProcessor):
                 # Check if we can convert the PDF
                 try:
                     print("Converting PDF to images...")
-                    images = convert_from_path(file_path)
+                    images = convert_from_path(file_path, dpi=300)
                     page_count = len(images)
                     print(f"Converted {page_count} pages")
 
@@ -298,8 +298,8 @@ class VisionDocumentProcessor(BaseDocumentProcessor):
                     if actual_size > self.max_image_size:
                         zoom_factor = self.max_image_size / actual_size
                         width, height = image.width * zoom_factor, image.height * zoom_factor
-                        image = image.resize((int(width), int(height)), Image.Resampling.LANCZOS)
-                    image.save(temp_image_path, "JPEG")
+                        image = image.resize((int(width), int(height)), Image.Resampling.BILINEAR)
+                    image.save(temp_image_path, "JPEG", quality=90)
                     image_paths.append((i, temp_image_path))
 
                 # Create batch groups
@@ -442,9 +442,9 @@ class VisionDocumentProcessor(BaseDocumentProcessor):
                 "content": [
                     {"type": "text",
                      "text": "Convert this document to well-formatted markdown with proper headers, lists, "
-                             "code blocks, and tables. \nNotice: \n1. If there is a table in the image, it should "
-                             "still be output as a table, and the format should be kept as much as possible. \n2. If "
-                             "there are people in the picture, try to identify their identities. \n3. The output "
+                             "code blocks, and tables. \n#Notice: \n##1. If there is a table in the image, it should "
+                             "still be output as a table, and the format should be kept as much as possible. \n##2. If "
+                             "there are people in the picture, try to identify their identities. \n##3. The output "
                              "language should be consistent with the content in the picture as much as possible"},
                     {
                         "type": "image_url",
@@ -506,11 +506,11 @@ class VisionDocumentProcessor(BaseDocumentProcessor):
         content = [{
             "type": "text",
             "text": f"These are consecutive pages from a document (pages {', '.join(map(str, page_numbers))}). "
-                    f"Convert these document pages to well-formatted markdown.\nNotice: \n1. If there is a table in "
-                    f"the image, it should still be output as a table, and the format should be kept as much as "
-                    f"possible. \n2. If there are people in the picture, try to identify their identities. \n3. The "
-                    f"output language should be consistent with the content in the picture as much as possible. \n4. "
-                    f"You should not include page numbers for better readability."
+                    f"Convert these document pages to well-formatted markdown.\n#Notice: \n##1. If there is a table in "
+                    f"the image, it should still be output as a table. \n##2. If there are people in the picture, "
+                    f"try to identify their identities. \n##3. The output language should be consistent with the "
+                    f"content in the picture as much as possible. \n##4. You should not include page numbers for "
+                    f"better readability."
         }]
 
         # Add each image to the content
