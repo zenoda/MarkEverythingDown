@@ -149,8 +149,8 @@ python main.py sample_pdf.pdf # path to input file \
 ### Docker
 
 ```shell
-docker build . zenoda/mark-everything-down:1.0.0
-docker run --name=mark-everything-down -p 8000:8000 zenoda/mark-everything-down:1.0.0
+docker build . mark-everything-down:1.0.0
+docker run --name=mark-everything-down -p 8000:8000 mark-everything-down:1.0.0
 ```
 通过浏览器可以访问FastApi测试页面：
 
